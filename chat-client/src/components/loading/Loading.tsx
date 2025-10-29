@@ -1,5 +1,9 @@
+import { Spinner } from "flowbite-react";
+
 export default function Loading(){
     return (
-        <h1>Loading...</h1>
+        <div className="size-full flex items-center justify-center">
+            <Spinner aria-label="Loading indicator"/>
+        </div>
     )
 }
