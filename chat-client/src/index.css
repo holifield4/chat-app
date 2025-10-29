@@ -1,9 +1,11 @@
 @font-face{
   font-family: Inter;
-  src: url("../src/assets/fonts/Inter_18pt-Regular.ttf");
+  src: url("./assets/font/Inter_18pt-Regular.ttf");
 }
 
 @import "tailwindcss";
+@plugin "flowbite-react/plugin/tailwindcss";
+@source "../.flowbite-react/class-list.json";
 
 @theme {
   --font-inter: Inter, "sans-serif";
