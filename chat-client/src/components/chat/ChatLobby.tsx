@@ -1,30 +1,49 @@
 import { Button, Card } from "flowbite-react";
+import { Power } from "../../assets/icons/Power";
 
 function ChatLobby() {
   return (
-    <div className="size-full flex flex-col items-center">
-      <div className="w-full h-20 bg-gradient-to-b from-sky-500 via-sky-400 to-sky-500 drop-shadow-md drop-shadow-gray-300/30 flex items-center px-8">
-        <span className="text-xl text-white">WebChat</span>
+    <div className="h-full flex flex-col bg-white/50 backdrop-blur-sm">
+      {/* Header */}
+      <div className="w-full h-20 bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-500 shadow-lg flex items-center px-8 border-b border-white/20">
+        <span className="text-2xl font-bold text-white tracking-tight">WebChat</span>
       </div>
-      <div className="flex-1 w-full flex flex-col gap-3 p-4 overflow-y-auto">
-        <Card className="w-full text-white">
+      
+      {/* Rooms List */}
+      <div className="flex-1 w-full flex flex-col gap-4 p-6 overflow-y-auto">
+        <Card className="w-full border-0 bg-sky-100 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 rounded-2xl">
           <div className="flex justify-between items-center">
             <div className="flex flex-col">
-              <p className="font-semibold">Room 1</p>
-              <div className="text-sm flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full animate-pulse bg-green-400" />
-                <span>110 users</span>
+              <p className="font-bold text-gray-800 text-lg">Room 1</p>
+              <div className="text-sm flex items-center gap-2 mt-1">
+                <div className="w-2 h-2 rounded-full bg-green-400 shadow-sm animate-pulse" />
+                <span className="text-gray-600">110 users online</span>
               </div>
             </div>
-            <Button>Join</Button>
+            <Button 
+              className="rounded-lg font-semibold shadow-md hover:shadow-lg transition-shadow"
+            >
+              Join
+            </Button>
           </div>
         </Card>
       </div>
-      <div className="text-white w-[99%] mb-1 h-20 flex flex-col gap-1 items-start px-2 justify-center rounded-md bg-gradient-to-b from-slate-600/70 via-slate-500/70 to-slate-600/70 shadow-[0_0_3px_2px] shadow-slate-300">
-        <span>@username</span>
-        <Button color="red">
-          Exit
-        </Button>
+      
+      {/* User Info & Logout */}
+      <div className="m-4 mt-auto bg-gradient-to-r from-slate-500 to-slate-400 text-white rounded-2xl shadow-lg border border-white/10">
+        <div className="flex items-center justify-between p-4">
+          <div className="flex flex-col">
+            <span className="font-semibold">@username</span>
+            <span className="text-sm text-gray-300">Online</span>
+          </div>
+          <Button 
+            size="sm" 
+            color="red"
+            className="rounded-lg shadow-md hover:shadow-lg transition-all"
+          >
+            <Power height={20} width={20} className="text-red-200" />
+          </Button>
+        </div>
       </div>
     </div>
   );
