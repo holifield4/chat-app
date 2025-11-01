@@ -4,7 +4,7 @@ import { Server } from 'socket.io';
 import cors from 'cors';
 import authRouter from './routes/auth.route';
 import { errorHandler } from './middleware/error.handler';
-import { IO } from './types/type';
+import { type IO } from './types/type';
 import { initEventHandlers } from './socket/socket.init';
 
 const app = express();
