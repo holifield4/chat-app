@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { Token } from "../types/types";
+import type { Token } from "../types/user.types";
 
 const useAuth = create<Token>((set) => ({
   token: localStorage.getItem('item'),
