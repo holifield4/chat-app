@@ -2,21 +2,31 @@ import { Server, Socket } from 'socket.io';
 
 export interface Message {
   id: string;
-  text: string;
+  roomId: string;
   username: string;
-  timestamp: number;
+  message: string;
+  timestamp: string;
+}
+
+export interface MessageContent {
+  messageContent: string;
+  toRoom: string
+}
+
+interface InterServerEvents {
+  //todo, if required
 }
 
 interface ServerToClientEvents {
-  noArg: () => void;
-  basicEmit: (a: number, b: string, c: Buffer) => void;
-  withAck: (d: string, callback: (e: number) => void) => void;
+  userJoined: (payload: { username: string; room: string }) => void;
+  rooms: (rooms: Room[]) => void;
+  message: (message: Message) => void;
 }
 
 interface ClientToServerEvents {
-  setUsername: (username) => void;
-  chats: (message) => void;
-  getRooms: (callback: (rooms: Room[]) => void) => void;
+  sendMessage: (content: MessageContent) => void;
+  getRoomList: (callback: (rooms: Room[]) => void) => void;
+  joinRoom: (roomName: string, callback: (roomName: string) => void) => void;
 }
 
 interface SocketData {
@@ -32,5 +42,6 @@ export type IO = Server<ClientToServerEvents, ServerToClientEvents, SocketData>;
 export type AppSocket = Socket<
   ClientToServerEvents,
   ServerToClientEvents,
+  InterServerEvents,
   SocketData
 >;
