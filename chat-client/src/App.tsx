@@ -1,14 +1,17 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import Loading from "./components/loading/Loading";
 import PageLayout from "./layout/PageLayout";
 import { ThemeInit } from "../.flowbite-react/init";
+import useAuth from "./store/useAuth";
 
 const LoginPage = lazy(() => import("./pages/LoginPage"));
 const Home = lazy(() => import("./pages/Home"));
 const PageNotFound = lazy(() => import("./pages/PageNotFound"));
 
 function App() {
+  const isAuthenticated = useAuth((state) => state.isAuthenticated);
+
   return (
     <>
     <ThemeInit/>
@@ -16,8 +19,8 @@ function App() {
       <PageLayout>
         <Suspense fallback={<Loading />}>
           <Routes>
-            <Route path="/" element={<LoginPage />} />
-            <Route path="/home" element={<Home />} />
+            <Route path="/" element={isAuthenticated ? <Home /> : <Navigate to="/login"/>}/>
+            <Route path="/login" element={isAuthenticated ? <Navigate to="/"/> : <LoginPage />} />
             <Route path="*" element={<PageNotFound />} />
           </Routes>
         </Suspense>
