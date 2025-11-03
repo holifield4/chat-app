@@ -1,0 +1,12 @@
+import { create } from "zustand";
+import type { User } from "../types/user.types";
+
+const useUser = create<User>((set) => ({
+  username: "",
+  userCurrentRoom: null,
+  setUsername: (username: string) => set(({ username })),
+  setUserCurrentRoom: (roomId) => set({userCurrentRoom: roomId}),
+  removeUser: () => set(({ username: "" })),
+}));
+
+export default useUser;
