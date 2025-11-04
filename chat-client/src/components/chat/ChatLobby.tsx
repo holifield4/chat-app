@@ -2,33 +2,28 @@ import { Button, Card } from "flowbite-react";
 import { Power } from "../../assets/icons/Power";
 import useAuth from "../../store/useAuth";
 import useUser from "../../store/useUser";
-import useSocket from "../../store/useSocket";
 import useRoom from "../../store/useRoom";
 import { useShallow } from "zustand/shallow";
+import CreateNewRoom from "./CreateRoom";
+import { useState } from "react";
+import { Plus } from "../../assets/icons/Plus";
 
 function ChatLobby() {
-  const disconnect  = useSocket((state) => state.disconnect);
-  const { username, userCurrentRoom, removeUser } = useUser(
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const { username, setUserCurrentRoom, userCurrentRoom } = useUser(
     useShallow((state) => ({
       username: state.username,
       userCurrentRoom: state.userCurrentRoom,
-      removeUser: state.removeUser,
+      setUserCurrentRoom: state.setUserCurrentRoom,
     }))
   );
   const logout = useAuth((state) => state.logout);
-  const { roomList, joinRoom } = useRoom(useShallow((state) => ({ roomList: state.roomList, joinRoom: state.joinRoom})))
-
-  const handleLogout = () => {
-    logout();
-    removeUser();
-    disconnect();
-  };
-
-  const handleJoinRoom = (roomName: string) => {
-    joinRoom(roomName, (newRoomName) => {
-      console.log(`Successfully joined room: ${newRoomName}`);
-    });
-  };
+  const { roomList, createRoom } = useRoom(
+    useShallow((state) => ({
+      roomList: state.roomList,
+      createRoom: state.createRoom,
+    }))
+  );
 
   return (
     <div className="h-full flex flex-col bg-white/50 backdrop-blur-sm">
@@ -41,13 +36,19 @@ function ChatLobby() {
 
       {/* Rooms List */}
       <div className="flex-1 w-full flex flex-col gap-4 p-6 overflow-y-auto">
+        <div className="flex justify-end">
+          <Button outline onClick={() => setIsOpen(true)} size="sm">
+            <Plus className="size-4 mr-1"/> Group
+          </Button>
+        </div>
+
+        {/* ========= Room List ========== */}
         {roomList.map((room) => (
           <Card
             key={room.name}
-            className={`w-full border-0 backdrop-blur-sm shadow-lg transition-all duration-300 rounded-2xl hover:scale-[1.02] ${
-              userCurrentRoom === room.name
-                ? "bg-green-100"
-                : "bg-sky-100"
+            onClick={() => setUserCurrentRoom(room.name)}
+            className={`w-full cursor-pointer border-0 backdrop-blur-sm shadow-lg transition-all duration-300 rounded-2xl hover:scale-[1.02] ${
+              userCurrentRoom === room.name ? "bg-green-100" : "bg-sky-100"
             }`}
           >
             <div className="flex justify-between items-center">
@@ -67,13 +68,6 @@ function ChatLobby() {
                   </span>
                 </div>
               </div>
-              <Button
-                className="rounded-lg font-semibold shadow-md hover:shadow-lg transition-shadow"
-                onClick={() => handleJoinRoom(room.name)}
-                disabled={userCurrentRoom === room.name}
-              >
-                {userCurrentRoom === room.name ? "Joined" : "Join"}
-              </Button>
             </div>
           </Card>
         ))}
@@ -90,12 +84,19 @@ function ChatLobby() {
             size="sm"
             color="red"
             className="rounded-lg shadow-md hover:shadow-lg transition-all"
-            onClick={handleLogout}
+            onClick={logout}
           >
             <Power height={20} width={20} className="text-red-200" />
           </Button>
         </div>
       </div>
+
+      {/* Create new room */}
+      <CreateNewRoom
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        onSubmit={(e) => createRoom(e)}
+      />
     </div>
   );
 }
