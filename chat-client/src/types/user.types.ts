@@ -10,7 +10,6 @@ export interface User {
   userCurrentRoom: string | null;
   setUsername: (name: string) => void;
   setUserCurrentRoom: (roomId: string | null) => void;
-  removeUser: () => void;
 }
 
 export interface LoginResponse {
