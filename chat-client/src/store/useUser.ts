@@ -6,7 +6,6 @@ const useUser = create<User>((set) => ({
   userCurrentRoom: null,
   setUsername: (username: string) => set(({ username })),
   setUserCurrentRoom: (roomId) => set({userCurrentRoom: roomId}),
-  removeUser: () => set(({ username: "" })),
 }));
 
 export default useUser;
