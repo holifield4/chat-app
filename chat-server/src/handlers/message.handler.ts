@@ -13,7 +13,7 @@ export const messageHandler = (io: IO, socket: AppSocket) => {
         timestamp: getCurrentTime()
     };
 
-    //broadcast the message
+    //broadcast the message to the target room
     io.to(payload.roomId).emit('message', payload);
   };
 
