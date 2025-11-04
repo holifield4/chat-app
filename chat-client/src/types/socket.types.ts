@@ -4,9 +4,8 @@ import type { Message, MessagePayload } from "./message.types";
 
 // *** SOCKET EVENTS *** =======================================================
 export interface ClientToServerEvents {
-  getRoomList: (callback: (rooms: Room[]) => void) => void;
-  joinRoom: (roomName: string, callback: (roomName: string) => void) => void;
   sendMessage: (payload: MessagePayload) => void;
+  createRoom: (roomName: string) => void;
 }
 
 export interface ServerToClientEvents {
