@@ -4,8 +4,11 @@ import { updateRoom } from './channel.handler';
 export const authHandler = (io: IO, socket: AppSocket) => {
   //join the client to general room by default on connected
   socket.join('general');
-  //update room count when client join
-  updateRoom(io);
+
+  //update room count for other sockets when client join
+  updateRoom(io, socket, 'broadcast');
+  
+  //todo:
   //broadcast to the general room when user joined
   io
     .to('general')
@@ -14,12 +17,12 @@ export const authHandler = (io: IO, socket: AppSocket) => {
   socket.on('disconnecting', () => {
     //update room for everyone when a user is about to disconnect
     //this is called before the socket leaves the rooms
-    setTimeout(() => updateRoom(io), 0);
+    // setTimeout(() => updateRoom(io, socket), 0);
   });
 
   socket.on('disconnect', () => {
     console.log(`@${socket.data.username} [${socket.id}] has disconnected`);
     //update room user count
-    updateRoom(io);
+    updateRoom(io, socket, 'broadcast');
   });
 };
