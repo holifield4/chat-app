@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import type { Token } from "../types/user.types";
+import useSocket from "./useSocket";
 
 const useAuth = create<Token>((set) => ({
   token: localStorage.getItem('item'),
@@ -11,7 +12,9 @@ const useAuth = create<Token>((set) => ({
   logout: () => {
     localStorage.removeItem("token");
     set({ token: null, isAuthenticated: false });
+    useSocket.getState().disconnect();
   },
+
 }));
 
 export default useAuth;
