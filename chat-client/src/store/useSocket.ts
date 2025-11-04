@@ -25,12 +25,8 @@ const useSocket = create<SocketStore>(() => ({
     socket.connect();
 
     socket.on("connect", () => {
-      // 1.get room list on connect and store to state
       // 2.join the user to general room by default
-      socket.emit("getRoomList", (rooms) => {
-        useRoom.getState().setRoomList(rooms);
-        useUser.getState().setUserCurrentRoom(rooms[0].name);
-      });
+      useUser.getState().setUserCurrentRoom("general");
     });
 
     socket.on("rooms", (rooms) => {
@@ -44,6 +40,7 @@ const useSocket = create<SocketStore>(() => ({
     socket.on("disconnect", () => {
       useRoom.getState().setRoomList([]);
       useUser.getState().setUserCurrentRoom(null);
+      useUser.getState().setUsername("");
     });
 
     socket.on("userJoined", (payload) => {
@@ -56,11 +53,12 @@ const useSocket = create<SocketStore>(() => ({
     });
   },
 
-  //manual disconnect @ user does not close/exit the app
+  //manual disconnect via button
   disconnect: () => {
-    socket.disconnect();
     useRoom.getState().setRoomList([]);
+    useUser.getState().setUsername("");
     useUser.getState().setUserCurrentRoom(null);
+    socket.disconnect();
   },
 }));
 
