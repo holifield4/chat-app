@@ -27,6 +27,7 @@ interface ClientToServerEvents {
   sendMessage: (content: MessageContent) => void;
   getRoomList: (callback: (rooms: Room[]) => void) => void;
   joinRoom: (roomName: string, callback: (roomName: string) => void) => void;
+  createRoom: (roomName: string) => void;
 }
 
 interface SocketData {
