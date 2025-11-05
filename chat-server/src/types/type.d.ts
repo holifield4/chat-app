@@ -13,6 +13,11 @@ export interface MessageContent {
   toRoom: string
 }
 
+export interface InviteMembersToRoom {
+  members: string[];
+  toRoom: string;
+}
+
 interface InterServerEvents {
   //todo, if required
 }
@@ -25,9 +30,10 @@ interface ServerToClientEvents {
 
 interface ClientToServerEvents {
   sendMessage: (content: MessageContent) => void;
-  getRoomList: (callback: (rooms: Room[]) => void) => void;
   joinRoom: (roomName: string, callback: (roomName: string) => void) => void;
   createRoom: (roomName: string) => void;
+  inviteMembers: (payload: InviteMembersToRoom) => void;
+  getAvailableMembers: (roomName: string, callback: (members: string[]) => void) => void;
 }
 
 interface SocketData {

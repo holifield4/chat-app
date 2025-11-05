@@ -1,11 +1,13 @@
 import type { Socket } from "socket.io-client";
-import type { Room } from "./rooms.types";
+import type { InviteMembers, Room } from "./rooms.types";
 import type { Message, MessagePayload } from "./message.types";
 
 // *** SOCKET EVENTS *** =======================================================
 export interface ClientToServerEvents {
   sendMessage: (payload: MessagePayload) => void;
   createRoom: (roomName: string) => void;
+  inviteMembers: (payload: InviteMembers) => void;
+  getAvailableMembers: (roomName: string, callback: (members: string[]) => void) => void;
 }
 
 export interface ServerToClientEvents {
