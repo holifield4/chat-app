@@ -1,75 +1,107 @@
-import { AppSocket, IO, Room } from '../types/type';
+import { RemoteSocket } from 'socket.io';
+import { AppSocket, InviteMembersToRoom, IO, Room } from '../types/type';
 
 //helper to update room detail when user join/leave
-export const updateRoom = (
+export const updateRoom = async (
   io: IO,
   socket: AppSocket,
-  updateType: 'self' | 'broadcast'
+  updateType: 'self' | 'broadcast',
 ) => {
-  if(updateType === 'self'){
-    console.log('updating for self', socket.data.username)
-    getRoomForSelf(io, socket, (rooms) => {
-      socket.emit('rooms', rooms)
-    })
+  if (updateType === 'self') {
+    console.log('updating for self', socket.data.username);
+    getRoomList(io, socket, (rooms) => {
+      socket.emit('rooms', rooms);
+    });
   } else {
-    console.log('updating for others')
-    const rooms = updateAllRooms(io);
-    
-    socket.broadcast.emit('rooms', rooms);
-  }
-};
+    console.log('updating for others');
 
-//function to get room list and no. of user in room
-const updateAllRooms = (
-  io: IO,
-): Room[] => {
-  const allExistingRooms = io.sockets.adapter.rooms; //include room the socket not joined
-  const roomList: Room[] = [];
+    const allCurrentConnectedSocketIds = await io.fetchSockets(); //fetch all connected sockets
 
-  //eliminates rooms that by default named as the socket id itself and list only the room that the socket has joined
-  for (const [roomId, connectedSocketIds] of allExistingRooms) {
-   if(!connectedSocketIds.has(roomId)){ //to this part it only eliminates the rooms named with socketIds
-    const room: Room = {
-      name: roomId,
-      userCount: connectedSocketIds.size,
+    for (const singleSocket of allCurrentConnectedSocketIds) {
+      getRoomList(io, singleSocket, (rooms) => {
+        singleSocket.emit('rooms', rooms); //update rooms for other sockets
+      });
     }
-    roomList.push(room);
-   }
   }
-  //send the room list to the client
-  return roomList
 };
 
-const getRoomForSelf = (io: IO, socket: AppSocket, cb: (rooms: Room[]) => void) => {
+const getRoomList = (
+  io: IO,
+  socket: AppSocket | RemoteSocket<any, AppSocket>,
+  cb: (rooms: Room[]) => void,
+) => {
   const allExistingRooms = io.sockets.adapter.rooms;
   const roomList: Room[] = [];
 
-  for(const roomId of socket.rooms){
-    if(roomId !== socket.id){
+  for (const roomId of socket.rooms) {
+    if (roomId !== socket.id) {
       const connectedSocketIds = allExistingRooms.get(roomId);
 
-      if(connectedSocketIds){
+      if (connectedSocketIds) {
         const room: Room = {
           name: roomId,
-          userCount: connectedSocketIds.size
+          userCount: connectedSocketIds.size,
         };
         roomList.push(room);
       }
     }
   }
   cb(roomList);
-}
+};
+
+const inviteMembers = async (io: IO, payload: InviteMembersToRoom) => {
+  const sockets = await io.fetchSockets();
+
+  payload.members.forEach((username) => {
+    const memberToInvite = sockets.find((s) => s.data.username === username);
+
+    if (!memberToInvite) throw new Error('No user found.');
+
+    memberToInvite.join(payload.toRoom);
+  });
+};
+
+const getMembersToInvite = async (
+  io: IO,
+  socket: AppSocket,
+  targetRoom: string,
+  cb: (members: string[]) => void,
+) => {
+  const connectedSockets = await io.fetchSockets();
+
+  const availableMembers: string[] = [];
+
+  for (const singleSocket of connectedSockets) {
+    if (socket.id === singleSocket.id) continue; //exclude requestor
+
+    const isAvailableToAdd = !singleSocket.rooms.has(targetRoom); //check if not member of target room
+
+    if (isAvailableToAdd) {
+      availableMembers.push(singleSocket.data.username);
+    }
+  }
+  cb(availableMembers);
+};
 
 //main channel handler function
 export const channelHandler = (io: IO, socket: AppSocket) => {
   //list the available rooms on connected
-  getRoomForSelf(io, socket, (rooms) => {
-    console.log('listing room for', socket.data.username);
+  getRoomList(io, socket, (rooms) => {
     socket.emit('rooms', rooms);
   });
 
   socket.on('createRoom', (newRoomName: string) => {
     socket.join(newRoomName);
     updateRoom(io, socket, 'self');
+  });
+
+  socket.on('inviteMembers', (members) => {
+    inviteMembers(io, members);
+    updateRoom(io, socket, 'self');
+    updateRoom(io, socket, 'broadcast');
+  });
+
+  socket.on('getAvailableMembers', (room, cb) => {
+    getMembersToInvite(io, socket, room, cb);
   });
 };
