@@ -5,9 +5,16 @@ import { useState } from "react";
 import useUser from "../../store/useUser";
 import ChatBubble from "./ChatBubble";
 import useMessage from "../../store/useMessage";
+import { UserAdd } from "../../assets/icons/UserAdd";
+import InviteMembersModal from "./InviteMembers";
 
 function ChatRoom() {
-  const roomList = useRoom((state) => state.roomList);
+  const { roomList, getAvailableMembers } = useRoom(
+    useShallow((state) => ({
+      roomList: state.roomList,
+      getAvailableMembers: state.getAvailableMembers,
+    }))
+  );
   const { username, userCurrentRoom } = useUser(
     useShallow((state) => ({
       username: state.username,
@@ -15,6 +22,7 @@ function ChatRoom() {
     }))
   );
   const [msg, setMsg] = useState<string>("");
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const { sendMessage, messages } = useMessage(
     useShallow((state) => ({
       sendMessage: state.sendMessage,
@@ -30,29 +38,43 @@ function ChatRoom() {
     setMsg("");
   };
 
+  const handleInviteMembers = () => {
+    getAvailableMembers(userCurrentRoom!);
+    setIsOpen(true);
+  };
+
   return (
     <div className="h-full flex flex-col bg-gradient-to-br from-slate-50 to-blue-50/30">
       {/* Header */}
-      <div className="w-full h-20 bg-gradient-to-l from-blue-600 via-blue-500 to-cyan-500 shadow-lg flex items-center justify-end px-8 border-b border-white/20">
+      <div className="w-full h-20 bg-gradient-to-l from-blue-600 via-blue-500 to-cyan-500 shadow-lg flex items-center justify-between px-8 border-b border-white/20">
         <div className="flex items-center gap-3">
           <div className="w-3 h-3 rounded-full bg-green-400 shadow-sm"></div>
           <span className="text-xl font-semibold text-white capitalize">
             {userCurrentRoom}
           </span>
           <span className="text-blue-100 text-sm">
-            {
-              roomList.find((i) => i.name === userCurrentRoom)
-                ?.userCount
-            }
+            {roomList.find((i) => i.name === userCurrentRoom)?.userCount}
           </span>
         </div>
+        {userCurrentRoom !== "general" && (
+          <Button
+            size="sm"
+            className="text-white border-none"
+            outline
+            onClick={handleInviteMembers}
+          >
+            <UserAdd className="size-8" />
+          </Button>
+        )}
       </div>
 
       <div className="flex-1 overflow-y-auto p-6 bg-transparent">
         <div className="max-w-4xl mx-auto space-y-4">
-          {messages.map((msg, index) => (
-            <ChatBubble key={index} user={username} message={msg} />
-          ))}
+          {messages
+            .filter((msg) => msg.roomId === userCurrentRoom)
+            .map((msg, index) => (
+              <ChatBubble key={index} user={username} message={msg} />
+            ))}
         </div>
       </div>
 
@@ -86,6 +108,12 @@ function ChatRoom() {
           </Button>
         </div>
       </div>
+
+      {/* Invite members modal */}
+      <InviteMembersModal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+      />
     </div>
   );
 }
