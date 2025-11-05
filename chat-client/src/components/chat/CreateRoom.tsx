@@ -7,21 +7,22 @@ import {
   TextInput,
 } from "flowbite-react";
 import { useState } from "react";
+import useRoom from "../../store/useRoom";
 
-type CreateNewRoomProps = {
+export type ModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (roomName: string) => void;
 };
 
-function CreateNewRoom({ isOpen, onClose, onSubmit }: CreateNewRoomProps) {
+function CreateNewRoom({ isOpen, onClose }: ModalProps) {
   const [newRoom, setNewRoom] = useState<string>("");
+  const createRoom = useRoom((state) => state.createRoom);
 
-    function onCreateRoom(){
-        onSubmit(newRoom);
-        onClose();
-        setNewRoom('');
-    }
+  const onCreateRoom = () => {
+    createRoom(newRoom);
+    onClose();
+    setNewRoom("");
+  }
 
   return (
     <Modal size="md" show={isOpen} onClose={onClose}>
