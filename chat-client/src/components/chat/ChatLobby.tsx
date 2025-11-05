@@ -18,12 +18,7 @@ function ChatLobby() {
     }))
   );
   const logout = useAuth((state) => state.logout);
-  const { roomList, createRoom } = useRoom(
-    useShallow((state) => ({
-      roomList: state.roomList,
-      createRoom: state.createRoom,
-    }))
-  );
+  const roomList = useRoom((state) => state.roomList);
 
   return (
     <div className="h-full flex flex-col bg-white/50 backdrop-blur-sm">
@@ -95,7 +90,6 @@ function ChatLobby() {
       <CreateNewRoom
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
-        onSubmit={(e) => createRoom(e)}
       />
     </div>
   );
