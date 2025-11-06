@@ -34,7 +34,7 @@ function CreateNewRoom({ isOpen, onClose }: ModalProps) {
             id="newRoomName"
             value={newRoom}
             required
-            placeholder="New room name..."
+            placeholder="New group name..."
             onChange={(e) => setNewRoom(e.target.value)}
           />
           <Button className="w-full" size="sm" type="submit">
