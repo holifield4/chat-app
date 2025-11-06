@@ -7,6 +7,7 @@ import { useShallow } from "zustand/shallow";
 import CreateNewRoom from "./CreateRoom";
 import { useState } from "react";
 import { Plus } from "../../assets/icons/Plus";
+import useSidebar from "../../stores/useSidebar";
 
 function ChatLobby() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -19,6 +20,7 @@ function ChatLobby() {
   );
   const logout = useAuth((state) => state.logout);
   const roomList = useRoom((state) => state.roomList);
+  const changeSidebarState = useSidebar((state) => state.changeSidebarState)
 
   return (
     <div className="h-full flex flex-col bg-white/50 backdrop-blur-sm">
@@ -33,7 +35,7 @@ function ChatLobby() {
       <div className="flex-1 w-full flex flex-col gap-4 p-6 overflow-y-auto">
         <div className="flex justify-end">
           <Button outline onClick={() => setIsOpen(true)} size="sm">
-            <Plus className="size-4 mr-1"/> Group
+            <Plus className="size-4 mr-1" /> Group
           </Button>
         </div>
 
@@ -41,7 +43,10 @@ function ChatLobby() {
         {roomList.map((room) => (
           <Card
             key={room.name}
-            onClick={() => setUserCurrentRoom(room.name)}
+            onClick={() => {
+              setUserCurrentRoom(room.name);
+              changeSidebarState();
+            }}
             className={`w-full cursor-pointer border-0 backdrop-blur-sm shadow-lg transition-all duration-300 rounded-2xl hover:scale-[1.02] ${
               userCurrentRoom === room.name ? "bg-sky-300" : "bg-sky-100"
             }`}
@@ -87,10 +92,7 @@ function ChatLobby() {
       </div>
 
       {/* Create new room */}
-      <CreateNewRoom
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-      />
+      <CreateNewRoom isOpen={isOpen} onClose={() => setIsOpen(false)} />
     </div>
   );
 }
