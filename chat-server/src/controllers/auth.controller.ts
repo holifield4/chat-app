@@ -17,19 +17,16 @@ export const login = async (
     const { username } = req.body as SocketData;
 
     if (!username || username.trim() === '') {
-      res.status(401).json({ error: 'Please provide username' });
+      return res.status(401).json({ error: 'Please provide username' });
     }
-
     const isTaken = await checkUsername(username.trim());
 
     if (isTaken) {
-      res.status(409).json({ error: 'Username is already taken' });
+      return res.status(409).json({ error: 'Username is already taken' });
     }
-
-    const token = jwt.sign({ username }, config.jwtSecret, {
+    const token = jwt.sign({ username: username.trim() }, config.jwtSecret, {
       expiresIn: '1h',
     });
-
     res.status(200).json({ message: 'Successfully login', token });
   } catch (error) {
     next(error);

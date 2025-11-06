@@ -89,7 +89,7 @@ export const channelHandler = (io: IO, socket: AppSocket) => {
 
   socket.on(
     'createRoom',
-    (newRoomName: string, cb: (success: boolean, messsage: string) => void) => {
+    (newRoomName: string, cb: (success: boolean, message: string) => void) => {
       //check if rooms with the name is exist
       const rooms = io.sockets.adapter.rooms;
 

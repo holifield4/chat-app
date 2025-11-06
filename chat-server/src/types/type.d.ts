@@ -10,7 +10,7 @@ export interface Message {
 
 export interface MessageContent {
   messageContent: string;
-  toRoom: string
+  toRoom: string;
 }
 
 export interface InviteMembersToRoom {
@@ -18,6 +18,7 @@ export interface InviteMembersToRoom {
   toRoom: string;
 }
 
+// Placeholder for future inter-server events (e.g., for Socket.IO Redis adapter)
 interface InterServerEvents {
   //todo, if required
 }

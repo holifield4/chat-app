@@ -46,12 +46,11 @@ const useSocket = create<SocketStore>(() => ({
 
     socket.connect();
 
-    socket.on("connect", () => {
+    socket.once("connect", () => {
       //set current room to general by default
       useUser.getState().setUserCurrentRoom("general");
     });
   },
-
   //manual disconnect via button
   disconnect: () => {
     socket.disconnect();
