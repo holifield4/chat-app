@@ -7,7 +7,7 @@ import {
   TextInput,
 } from "flowbite-react";
 import { useState } from "react";
-import useRoom from "../../store/useRoom";
+import useRoom from "../../stores/useRoom";
 
 export type ModalProps = {
   isOpen: boolean;
@@ -34,7 +34,7 @@ function CreateNewRoom({ isOpen, onClose }: ModalProps) {
             id="newRoomName"
             value={newRoom}
             required
-            placeholder="New room name..."
+            placeholder="New group name..."
             onChange={(e) => setNewRoom(e.target.value)}
           />
           <Button className="w-full" size="sm" type="submit">

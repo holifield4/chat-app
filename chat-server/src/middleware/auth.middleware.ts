@@ -1,6 +1,7 @@
 import type { AppSocket, IO, SocketData } from '../types/type';
 import jwt from 'jsonwebtoken';
 import config from '../config/config';
+import { io } from '../app';
 
 export const verifyHandshake = (io: IO) => {
   io.use((socket: AppSocket, next: (err?: Error) => void) => {
@@ -19,3 +20,9 @@ export const verifyHandshake = (io: IO) => {
     }
   });
 };
+
+export const checkUsername = async (username: string) => {
+  const connectedSockets = await io.fetchSockets();
+
+  return connectedSockets.some((s) => s.data.username === username);
+}

@@ -1,12 +1,13 @@
 import { Button, TextInput } from "flowbite-react";
 import { Card } from "flowbite-react/components/Card";
 import { useNavigate } from "react-router-dom";
-import useUser from "../store/useUser";
-import useAuth from "../store/useAuth";
+import useUser from "../stores/useUser";
+import useAuth from "../stores/useAuth";
 import type { LoginResponse } from "../types/user.types";
-import useSocket from "../store/useSocket";
+import useSocket from "../stores/useSocket";
 import { useShallow } from "zustand/shallow";
 import { ArrowRight } from "../assets/icons/ArrowRight";
+import { toast } from "../utils/toast";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -38,11 +39,12 @@ function LoginPage() {
           storeToken(data.token);
           connect();
           navigate("/");
+          toast("Welcome to WebChat", 'success')
         } else if (data.error) {
-          alert(data.error);
+          toast(data.error, 'error')
         }
       })
-      .catch((err) => alert(err));
+      .catch((err) => toast(err, 'error'));
   }
 
   return (
@@ -90,7 +92,7 @@ function LoginPage() {
             className="w-full flex items-center justify-center gap-4 rounded-xl font-semibold text-lg py-3 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
           >
             Enter Chatroom
-            <ArrowRight height={25} width={25}/>
+            <ArrowRight height={25} width={25} />
           </Button>
         </form>
 

@@ -5,7 +5,7 @@ import type { Message, MessagePayload } from "./message.types";
 // *** SOCKET EVENTS *** =======================================================
 export interface ClientToServerEvents {
   sendMessage: (payload: MessagePayload) => void;
-  createRoom: (roomName: string) => void;
+  createRoom: (roomName: string, callback: (success: boolean, message: string) => void) => void;
   inviteMembers: (payload: InviteMembers) => void;
   getAvailableMembers: (roomName: string, callback: (members: string[]) => void) => void;
 }
@@ -13,7 +13,7 @@ export interface ClientToServerEvents {
 export interface ServerToClientEvents {
   connect: () => void;
   disconnect: () => void;
-  userJoined: (payload: { username: string; room: string }) => void;
+  userJoined: (user: string) => void;
   rooms: (rooms: Room[]) => void;
   message: (message: Message) => void;
 }

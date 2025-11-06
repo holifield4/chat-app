@@ -8,8 +8,8 @@ import {
   ModalHeader,
 } from "flowbite-react";
 import type { ModalProps } from "./CreateRoom";
-import useUser from "../../store/useUser";
-import useRoom from "../../store/useRoom";
+import useUser from "../../stores/useUser";
+import useRoom from "../../stores/useRoom";
 import { UserAdd } from "../../assets/icons/UserAdd";
 import { useState } from "react";
 import { useShallow } from "zustand/shallow";

@@ -1,8 +1,8 @@
 import { Button, Card } from "flowbite-react";
 import { Power } from "../../assets/icons/Power";
-import useAuth from "../../store/useAuth";
-import useUser from "../../store/useUser";
-import useRoom from "../../store/useRoom";
+import useAuth from "../../stores/useAuth";
+import useUser from "../../stores/useUser";
+import useRoom from "../../stores/useRoom";
 import { useShallow } from "zustand/shallow";
 import CreateNewRoom from "./CreateRoom";
 import { useState } from "react";
@@ -43,7 +43,7 @@ function ChatLobby() {
             key={room.name}
             onClick={() => setUserCurrentRoom(room.name)}
             className={`w-full cursor-pointer border-0 backdrop-blur-sm shadow-lg transition-all duration-300 rounded-2xl hover:scale-[1.02] ${
-              userCurrentRoom === room.name ? "bg-green-100" : "bg-sky-100"
+              userCurrentRoom === room.name ? "bg-sky-300" : "bg-sky-100"
             }`}
           >
             <div className="flex justify-between items-center">

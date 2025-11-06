@@ -1,10 +1,10 @@
 import { Button, Textarea } from "flowbite-react";
-import useRoom from "../../store/useRoom";
+import useRoom from "../../stores/useRoom";
 import { useShallow } from "zustand/shallow";
 import { useState } from "react";
-import useUser from "../../store/useUser";
+import useUser from "../../stores/useUser";
 import ChatBubble from "./ChatBubble";
-import useMessage from "../../store/useMessage";
+import useMessage from "../../stores/useMessage";
 import { UserAdd } from "../../assets/icons/UserAdd";
 import InviteMembersModal from "./InviteMembers";
 
@@ -51,9 +51,6 @@ function ChatRoom() {
           <div className="w-3 h-3 rounded-full bg-green-400 shadow-sm"></div>
           <span className="text-xl font-semibold text-white capitalize">
             {userCurrentRoom}
-          </span>
-          <span className="text-blue-100 text-sm">
-            {roomList.find((i) => i.name === userCurrentRoom)?.userCount}
           </span>
         </div>
         {userCurrentRoom !== "general" && (

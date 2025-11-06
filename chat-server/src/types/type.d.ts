@@ -10,7 +10,7 @@ export interface Message {
 
 export interface MessageContent {
   messageContent: string;
-  toRoom: string
+  toRoom: string;
 }
 
 export interface InviteMembersToRoom {
@@ -18,12 +18,13 @@ export interface InviteMembersToRoom {
   toRoom: string;
 }
 
+// Placeholder for future inter-server events (e.g., for Socket.IO Redis adapter)
 interface InterServerEvents {
   //todo, if required
 }
 
 interface ServerToClientEvents {
-  userJoined: (payload: { username: string; room: string }) => void;
+  userJoined: (user: string) => void;
   rooms: (rooms: Room[]) => void;
   message: (message: Message) => void;
 }
@@ -31,7 +32,7 @@ interface ServerToClientEvents {
 interface ClientToServerEvents {
   sendMessage: (content: MessageContent) => void;
   joinRoom: (roomName: string, callback: (roomName: string) => void) => void;
-  createRoom: (roomName: string) => void;
+  createRoom: (roomName: string, callback: (success: boolean, message: string) => void ) => void;
   inviteMembers: (payload: InviteMembersToRoom) => void;
   getAvailableMembers: (roomName: string, callback: (members: string[]) => void) => void;
 }

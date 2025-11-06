@@ -8,17 +8,8 @@ export const authHandler = (io: IO, socket: AppSocket) => {
   //update room count for other sockets when client join
   updateRoom(io, socket, 'broadcast');
   
-  //todo:
-  //broadcast to the general room when user joined
-  io
-    .to('general')
-    .emit('userJoined', { username: socket.data.username, room: 'general' });
-
-  socket.on('disconnecting', () => {
-    //update room for everyone when a user is about to disconnect
-    //this is called before the socket leaves the rooms
-    // setTimeout(() => updateRoom(io, socket), 0);
-  });
+  //broadcast to all other sockets when user joined
+  socket.broadcast.emit('userJoined', socket.data.username);
 
   socket.on('disconnect', () => {
     console.log(`@${socket.data.username} [${socket.id}] has disconnected`);
