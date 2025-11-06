@@ -16,6 +16,5 @@ export const initEventHandlers = (io: IO) => {
     authHandler(io, socket);
     channelHandler(io, socket);
     messageHandler(io, socket);
-
   });
 };
