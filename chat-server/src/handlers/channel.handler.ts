@@ -8,13 +8,10 @@ export const updateRoom = async (
   updateType: 'self' | 'broadcast',
 ) => {
   if (updateType === 'self') {
-    console.log('updating for self', socket.data.username);
     getRoomList(io, socket, (rooms) => {
       socket.emit('rooms', rooms);
     });
   } else {
-    console.log('updating for others');
-
     const allCurrentConnectedSocketIds = await io.fetchSockets(); //fetch all connected sockets
 
     for (const singleSocket of allCurrentConnectedSocketIds) {
@@ -90,10 +87,22 @@ export const channelHandler = (io: IO, socket: AppSocket) => {
     socket.emit('rooms', rooms);
   });
 
-  socket.on('createRoom', (newRoomName: string) => {
-    socket.join(newRoomName);
-    updateRoom(io, socket, 'self');
-  });
+  socket.on(
+    'createRoom',
+    (newRoomName: string, cb: (success: boolean, messsage: string) => void) => {
+      //check if rooms with the name is exist
+      const rooms = io.sockets.adapter.rooms;
+
+      if (rooms.has(newRoomName.toLowerCase().trim())) {
+        cb(false, `${newRoomName} already exists.`);
+        return;
+      }
+
+      socket.join(newRoomName);
+      updateRoom(io, socket, 'self');
+      cb(true, `${newRoomName} created successfully`);
+    },
+  );
 
   socket.on('inviteMembers', (members) => {
     inviteMembers(io, members);
