@@ -5,10 +5,32 @@ import useAuth from "./useAuth";
 import useRoom from "./useRoom";
 import { storeMessages } from "./useMessage";
 import useUser from "./useUser";
+import { toast } from "../utils/toast";
 
 const socket: ClientSocket = io("http://localhost:3000", {
   transports: ["websocket", "polling"],
   autoConnect: false,
+});
+
+socket.on("rooms", (rooms) => {
+  useRoom.getState().setRoomList(rooms);
+});
+
+socket.on("message", (payload) => {
+  storeMessages(payload);
+});
+
+socket.on("disconnect", () => {
+  useRoom.getState().setRoomList([]);
+  useUser.getState().setUserCurrentRoom(null);
+});
+
+socket.on("userJoined", (user) => {
+  toast(`${user} has joined WebChat`, "info");
+});
+
+socket.on("connect_error", (e) => {
+  toast(`Failed to connect: ${e}`, "error");
 });
 
 const useSocket = create<SocketStore>(() => ({
@@ -25,39 +47,13 @@ const useSocket = create<SocketStore>(() => ({
     socket.connect();
 
     socket.on("connect", () => {
-      // 2.join the user to general room by default
+      //set current room to general by default
       useUser.getState().setUserCurrentRoom("general");
-    });
-
-    socket.on("rooms", (rooms) => {
-      useRoom.getState().setRoomList(rooms);
-    });
-
-    socket.on("message", (payload) => {
-      storeMessages(payload);
-    });
-
-    socket.on("disconnect", () => {
-      useRoom.getState().setRoomList([]);
-      useUser.getState().setUserCurrentRoom(null);
-      useUser.getState().setUsername("");
-    });
-
-    socket.on("userJoined", (payload) => {
-      //payload here is what the server send
-      console.log(`User ${payload.username} joined room ${payload.room}`);
-    });
-
-    socket.on("connect_error", (e) => {
-      console.log("Failed to connect: ", e);
     });
   },
 
   //manual disconnect via button
   disconnect: () => {
-    useRoom.getState().setRoomList([]);
-    useUser.getState().setUsername("");
-    useUser.getState().setUserCurrentRoom(null);
     socket.disconnect();
   },
 }));
