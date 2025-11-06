@@ -23,7 +23,7 @@ interface InterServerEvents {
 }
 
 interface ServerToClientEvents {
-  userJoined: (payload: { username: string; room: string }) => void;
+  userJoined: (user: string) => void;
   rooms: (rooms: Room[]) => void;
   message: (message: Message) => void;
 }
@@ -31,7 +31,7 @@ interface ServerToClientEvents {
 interface ClientToServerEvents {
   sendMessage: (content: MessageContent) => void;
   joinRoom: (roomName: string, callback: (roomName: string) => void) => void;
-  createRoom: (roomName: string) => void;
+  createRoom: (roomName: string, callback: (success: boolean, message: string) => void ) => void;
   inviteMembers: (payload: InviteMembersToRoom) => void;
   getAvailableMembers: (roomName: string, callback: (members: string[]) => void) => void;
 }
