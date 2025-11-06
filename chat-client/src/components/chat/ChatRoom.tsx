@@ -7,9 +7,11 @@ import ChatBubble from "./ChatBubble";
 import useMessage from "../../stores/useMessage";
 import { UserAdd } from "../../assets/icons/UserAdd";
 import InviteMembersModal from "./InviteMembers";
+import { ArrowLeft } from "../../assets/icons/ArrowLeft";
+import useSidebar from "../../stores/useSidebar";
 
 function ChatRoom() {
-  const { roomList, getAvailableMembers } = useRoom(
+  const { getAvailableMembers } = useRoom(
     useShallow((state) => ({
       roomList: state.roomList,
       getAvailableMembers: state.getAvailableMembers,
@@ -29,6 +31,7 @@ function ChatRoom() {
       messages: state.messages,
     }))
   );
+  const changeSidebarState = useSidebar((state) => state.changeSidebarState)
 
   const handleSendMsg = () => {
     sendMessage({
@@ -46,9 +49,16 @@ function ChatRoom() {
   return (
     <div className="h-full flex flex-col bg-gradient-to-br from-slate-50 to-blue-50/30">
       {/* Header */}
-      <div className="w-full h-20 bg-gradient-to-l from-blue-600 via-blue-500 to-cyan-500 shadow-lg flex items-center justify-between px-8 border-b border-white/20">
+      <div className="w-full h-20 bg-gradient-to-l from-blue-600 via-blue-500 to-cyan-500 shadow-lg flex items-center justify-between px-3 md:px-8 border-b border-white/20">
         <div className="flex items-center gap-3">
-          <div className="w-3 h-3 rounded-full bg-green-400 shadow-sm"></div>
+          <Button
+            size="sm"
+            outline
+            className="text-white border-none md:hidden"
+            onClick={changeSidebarState}
+          >
+            <ArrowLeft />
+          </Button>
           <span className="text-xl font-semibold text-white capitalize">
             {userCurrentRoom}
           </span>
@@ -99,7 +109,7 @@ function ChatRoom() {
             className="rounded-xl h-12 px-6 shadow-lg hover:shadow-xl transition-all font-semibold"
             type="button"
             onClick={handleSendMsg}
-            disabled={!msg.trim()} // Optional: disable when empty
+            disabled={!msg.trim()}
           >
             Send
           </Button>
