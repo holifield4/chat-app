@@ -52,9 +52,6 @@ function ChatRoom() {
           <span className="text-xl font-semibold text-white capitalize">
             {userCurrentRoom}
           </span>
-          <span className="text-blue-100 text-sm">
-            {roomList.find((i) => i.name === userCurrentRoom)?.userCount}
-          </span>
         </div>
         {userCurrentRoom !== "general" && (
           <Button
