@@ -3,7 +3,7 @@ import { lazy, Suspense } from "react";
 import Loading from "./components/loading/Loading";
 import PageLayout from "./layout/PageLayout";
 import { ThemeInit } from "../.flowbite-react/init";
-import useAuth from "./store/useAuth";
+import useAuth from "./stores/useAuth";
 
 const LoginPage = lazy(() => import("./pages/LoginPage"));
 const Home = lazy(() => import("./pages/Home"));

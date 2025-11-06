@@ -7,7 +7,7 @@ import {
   TextInput,
 } from "flowbite-react";
 import { useState } from "react";
-import useRoom from "../../store/useRoom";
+import useRoom from "../../stores/useRoom";
 
 export type ModalProps = {
   isOpen: boolean;

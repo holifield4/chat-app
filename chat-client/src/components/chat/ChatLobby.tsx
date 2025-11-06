@@ -1,8 +1,8 @@
 import { Button, Card } from "flowbite-react";
 import { Power } from "../../assets/icons/Power";
-import useAuth from "../../store/useAuth";
-import useUser from "../../store/useUser";
-import useRoom from "../../store/useRoom";
+import useAuth from "../../stores/useAuth";
+import useUser from "../../stores/useUser";
+import useRoom from "../../stores/useRoom";
 import { useShallow } from "zustand/shallow";
 import CreateNewRoom from "./CreateRoom";
 import { useState } from "react";

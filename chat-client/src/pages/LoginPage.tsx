@@ -1,10 +1,10 @@
 import { Button, TextInput } from "flowbite-react";
 import { Card } from "flowbite-react/components/Card";
 import { useNavigate } from "react-router-dom";
-import useUser from "../store/useUser";
-import useAuth from "../store/useAuth";
+import useUser from "../stores/useUser";
+import useAuth from "../stores/useAuth";
 import type { LoginResponse } from "../types/user.types";
-import useSocket from "../store/useSocket";
+import useSocket from "../stores/useSocket";
 import { useShallow } from "zustand/shallow";
 import { ArrowRight } from "../assets/icons/ArrowRight";
 
