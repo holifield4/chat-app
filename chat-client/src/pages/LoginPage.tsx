@@ -44,11 +44,10 @@ function LoginPage() {
           toast(data.error, 'error')
         }
       })
-      .catch((err) => toast(err, 'error'));
-  }
+      .catch((err) => toast(err?.message || "Failed to login. Please try again.", 'error'));  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-500 to-cyan-500 flex items-center justify-center p-4">
+    <div className="h-full bg-gradient-to-br from-blue-600 via-blue-500 to-cyan-500 flex items-center justify-center p-4">
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-white/10 rounded-full blur-3xl"></div>
