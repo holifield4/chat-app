@@ -4,7 +4,7 @@ Chat app with Socket IO
 
 ## Tech Stacks
 ### Backend
-- (Socket.IO)[https://socket.io/]
+- [Socket.IO](https://socket.io/)
 - ExpressJS
 - NodeJS
 - TypeScript
@@ -15,7 +15,7 @@ Chat app with Socket IO
 - TypeScript
 - Zustand
 - Tailwind
-- (Flowbite-React UI Library)[https://flowbite-react.com/]
+- [Flowbite-React UI Library](https://flowbite-react.com/)
 
 ## Getting Started
 1. Install all dependencies for both chat-server and chat-client
